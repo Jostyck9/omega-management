@@ -1,7 +1,6 @@
 // auth.tsx
 import React from "react";
 
-// firebase
 import Metatags from "@components/Metatags";
 import SignInButton from "@components/SignIn";
 import Link from "next/link";
