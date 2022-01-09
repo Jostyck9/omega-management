@@ -7,12 +7,14 @@ import { createUserProfileDocument } from "../lib/firebase/user";
 
 type authContextType = {
     user?: User;
+    isLoading: boolean,
     login: () => Promise<UserCredential>;
     logout: () => Promise<void>;
 };
 
 const authContextDefaultValues: authContextType = {
     user: undefined,
+    isLoading: true,
     login: () => Promise.resolve({} as Promise<UserCredential>),
     logout: () => Promise.resolve(),
 };
@@ -29,6 +31,7 @@ type Props = {
 
 export function AuthProvider({ children }: Props) {
     const [user, setUser] = useState<User>();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
@@ -36,10 +39,12 @@ export function AuthProvider({ children }: Props) {
                 createUserProfileDocument(user).then((userRef) => {
                     onSnapshot(userRef, (snapShot) => {
                         setUser(snapShot.data() as User);
+                        setIsLoading(false);
                     });
                 });
             } else {
                 setUser(undefined);
+                setIsLoading(false);
             }
         });
     }, []);
@@ -54,6 +59,7 @@ export function AuthProvider({ children }: Props) {
 
     const value = {
         user,
+        isLoading,
         login,
         logout,
     };
