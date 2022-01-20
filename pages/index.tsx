@@ -2,7 +2,6 @@ import Metatags from "@components/Metatags";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
-import TopAppBar from '../components/TopAppBar';
 
 const Home: NextPage = () => {
     const { user, isLoading, logout } = useAuth();
@@ -23,7 +22,6 @@ const Home: NextPage = () => {
     return (
         <div>
             <Metatags />
-            <TopAppBar/>
             <main>
                 <h1>Hello {toDisplay}</h1>
             </main>
