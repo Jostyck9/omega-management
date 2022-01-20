@@ -1,6 +1,5 @@
 import Metatags from "@components/Metatags";
 import type { NextPage } from "next";
-import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 
 const Home: NextPage = () => {

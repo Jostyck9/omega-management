@@ -44,7 +44,7 @@ const TopAppBar = () => {
 
     const onAccounts = () => {
         handleCloseUserMenu();
-        Router.push("/accounts");
+        Router.push("/account");
     };
 
     const onDashboard = () => {
