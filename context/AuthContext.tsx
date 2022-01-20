@@ -3,11 +3,11 @@ import User from "../lib/firebase/models/user";
 import { onAuthStateChanged, signInWithPopup, UserCredential } from "firebase/auth";
 import { onSnapshot } from "firebase/firestore";
 import { auth, googleAuthProvider } from "../lib/firebase/clientApp";
-import { createUserProfileDocument } from "../lib/firebase/user";
+import { createUserProfileDocument } from "../lib/firebase/controllers/user";
 
 type authContextType = {
     user?: User;
-    isLoading: boolean,
+    isLoading: boolean;
     login: () => Promise<UserCredential>;
     logout: () => Promise<void>;
 };
@@ -38,7 +38,7 @@ export function AuthProvider({ children }: Props) {
             if (user) {
                 createUserProfileDocument(user).then((userRef) => {
                     onSnapshot(userRef, (snapShot) => {
-                        setUser(snapShot.data() as User);
+                        setUser({ id: snapShot.id, ...snapShot.data() } as User);
                         setIsLoading(false);
                     });
                 });
@@ -50,10 +50,12 @@ export function AuthProvider({ children }: Props) {
     }, []);
 
     const login = () => {
+        setIsLoading(true);
         return signInWithPopup(auth, googleAuthProvider);
     };
 
     const logout = () => {
+        setIsLoading(true);
         return auth.signOut();
     };
 

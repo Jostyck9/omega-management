@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "./clientApp";
+import { db } from "../clientApp";
 
 export const createUserProfileDocument = async (userAuth: User, additionalData?: any) => {
     const userRef = doc(db, `users`, userAuth.uid);
