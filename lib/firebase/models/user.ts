@@ -1,5 +1,7 @@
 export default interface User {
+    id?: string;
     displayName: string;
     email: string;
-    createdAt: number;
+    photoURL?: string;
+    createdAt: Date;
 }

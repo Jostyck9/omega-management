@@ -1,15 +1,16 @@
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { AuthProvider } from "context/AuthContext";
+import TopAppBar from "@components/TopAppBar";
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
     return (
         <>
             <AuthProvider>
-                <Component {...pageProps} />;
+                <TopAppBar/>
+                <Component {...pageProps} />
             </AuthProvider>
         </>
     );
-}
+};
 
 export default MyApp;

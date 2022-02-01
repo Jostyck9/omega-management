@@ -1,7 +1,6 @@
 import Metatags from "@components/Metatags";
+import { Typography } from "@mui/material";
 import type { NextPage } from "next";
-import Link from "next/link";
-import styles from "../styles/Home.module.css";
 import { useAuth } from "../context/AuthContext";
 
 const Home: NextPage = () => {
@@ -11,27 +10,24 @@ const Home: NextPage = () => {
 
     if (isLoading) {
         return (
-            <div className={styles.container}>
+            <div>
                 <Metatags />
-                <main className={styles.main}>
-                    <h1>Loading</h1>
+                <main>
+                    <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+                        Loading
+                    </Typography>
                 </main>
             </div>
         );
     }
 
     return (
-        <div className={styles.container}>
+        <div>
             <Metatags />
-            <main className={styles.main}>
-                <h1>Hello {toDisplay}</h1>
-                {!user && <Link href={"/auth"}>Connection</Link>}
-
-                {user && (
-                    <button className="btn-google" onClick={logout}>
-                        Déconnection
-                    </button>
-                )}
+            <main>
+                <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+                    Hello {toDisplay}
+                </Typography>
             </main>
         </div>
     );
