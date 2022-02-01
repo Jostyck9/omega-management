@@ -3,7 +3,7 @@ import React from "react";
 
 import type { NextPage } from "next";
 import Metatags from "@components/Metatags";
-import { Typography } from "@mui/material";
+import { Typography, Stack } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams, MuiEvent } from "@mui/x-data-grid";
 import AuthCheck from "@components/authCheck";
 import Router from "next/router";
@@ -30,19 +30,21 @@ const Accounts: NextPage = () => {
 
     const onRowClick = (params: GridRowParams, event: MuiEvent<React.MouseEvent>) => {
         event.defaultMuiPrevented = true;
-        Router.push(`/account/${params.id}/pack`);
+        Router.push(`/accounts/${params.id}/packs`);
     };
 
     return (
         <AuthCheck>
             <main>
                 <Metatags title="Accounts" description="Manage all the accounts attached to you" />
-                <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-                    Manage Accounts
-                </Typography>
-                <div style={{ height: 400, width: "100%" }}>
-                    <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} onRowClick={onRowClick} />
-                </div>
+                <Stack margin={5} spacing={2}>
+                    <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+                        Manage Accounts
+                    </Typography>
+                    <div style={{ height: 400, width: "100%" }}>
+                        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} onRowClick={onRowClick} />
+                    </div>
+                </Stack>
             </main>
         </AuthCheck>
     );

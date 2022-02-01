@@ -11,7 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import Router from "next/router";
 import { useAuth } from "../context/AuthContext";
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Stack } from "@mui/material";
 import { styled } from "@mui/material";
 
 const Title = styled(Typography)<TypographyProps>(({ theme }) => ({
@@ -44,11 +44,7 @@ const TopAppBar = () => {
 
     const onAccounts = () => {
         handleCloseUserMenu();
-        Router.push("/account");
-    };
-
-    const onDashboard = () => {
-        handleCloseUserMenu();
+        Router.push("/accounts");
     };
 
     const onLogout = () => {
@@ -67,7 +63,10 @@ const TopAppBar = () => {
                     </Button>
                 )}
                 {user && (
-                    <>
+                    <Stack spacing={2} direction="row">
+                        <Button color="inherit" onClick={onAccounts}>
+                            ACOUNTS
+                        </Button>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                 {!user && <AccountCircle />}
@@ -94,19 +93,11 @@ const TopAppBar = () => {
                                 <Typography textAlign="center">{"Profile"}</Typography>
                             </MenuItem>
 
-                            <MenuItem key={"Accounts"} onClick={onAccounts}>
-                                <Typography textAlign="center">{"Accounts"}</Typography>
-                            </MenuItem>
-
-                            <MenuItem key={"Dashboard"} onClick={onDashboard}>
-                                <Typography textAlign="center">{"Dashboard"}</Typography>
-                            </MenuItem>
-
                             <MenuItem key={"Logout"} onClick={onLogout}>
                                 <Typography textAlign="center">{"Logout"}</Typography>
                             </MenuItem>
                         </Menu>
-                    </>
+                    </Stack>
                 )}
             </Toolbar>
         </AppBar>

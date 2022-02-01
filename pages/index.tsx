@@ -1,4 +1,5 @@
 import Metatags from "@components/Metatags";
+import { Typography } from "@mui/material";
 import type { NextPage } from "next";
 import { useAuth } from "../context/AuthContext";
 
@@ -12,7 +13,9 @@ const Home: NextPage = () => {
             <div>
                 <Metatags />
                 <main>
-                    <h1>Loading</h1>
+                    <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+                        Loading
+                    </Typography>
                 </main>
             </div>
         );
@@ -22,7 +25,9 @@ const Home: NextPage = () => {
         <div>
             <Metatags />
             <main>
-                <h1>Hello {toDisplay}</h1>
+                <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+                    Hello {toDisplay}
+                </Typography>
             </main>
         </div>
     );

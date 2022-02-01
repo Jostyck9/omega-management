@@ -1,7 +1,7 @@
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams, GridValueGetterParams, MuiEvent } from "@mui/x-data-grid";
 import type { NextPage } from "next";
 import Metatags from "@components/Metatags";
-import { Typography } from "@mui/material";
+import { Typography, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useAuth } from "../../../../context/AuthContext";
 import AuthCheck from "@components/authCheck";
@@ -48,19 +48,21 @@ const Packs: NextPage = () => {
 
     const onRowClick = (params: GridRowParams, event: MuiEvent<React.MouseEvent>) => {
         event.defaultMuiPrevented = true;
-        router.push(`/account/${accountId}/pack/${params.id}`);
+        router.push(`/accounts/${accountId}/packs/${params.id}`);
     };
 
     return (
         <AuthCheck>
             <main>
                 <Metatags title="Packs" description="Manage all the packs attached to this account" />
-                <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-                    Manage packs for account
-                </Typography>
-                <div style={{ height: 400, width: "100%" }}>
-                    <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} onRowClick={onRowClick} />
-                </div>
+                <Stack margin={5} spacing={2}>
+                    <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+                        Manage packs for account
+                    </Typography>
+                    <div style={{ height: 400, width: "100%" }}>
+                        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} onRowClick={onRowClick} />
+                    </div>
+                </Stack>
             </main>
         </AuthCheck>
     );
