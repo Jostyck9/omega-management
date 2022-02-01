@@ -13,6 +13,7 @@ import Router from "next/router";
 import { useAuth } from "../context/AuthContext";
 import { Avatar, Box, Stack } from "@mui/material";
 import { styled } from "@mui/material";
+import Link from "next/link";
 
 const Title = styled(Typography)<TypographyProps>(({ theme }) => ({
     cursor: "pointer",
@@ -30,21 +31,8 @@ const TopAppBar = () => {
         setAnchorElUser(null);
     };
 
-    const onLogin = () => {
-        Router.push("/auth");
-    };
-
-    const onHome = () => {
-        Router.push("/");
-    };
-
     const onProfile = () => {
         handleCloseUserMenu();
-    };
-
-    const onAccounts = () => {
-        handleCloseUserMenu();
-        Router.push("/accounts");
     };
 
     const onLogout = () => {
@@ -55,18 +43,20 @@ const TopAppBar = () => {
     return (
         <AppBar position="static">
             <Toolbar>
-                <Title onClick={onHome}>Omega-Management</Title>
+                <Link href={"/"} passHref>
+                    <Title>Omega-Management</Title>
+                </Link>
                 <Box sx={{ flexGrow: 1 }}></Box>
                 {!user && (
-                    <Button color="inherit" onClick={onLogin}>
-                        Login
-                    </Button>
+                    <Link href={"/auth"} passHref>
+                        <Button color="inherit">Login</Button>
+                    </Link>
                 )}
                 {user && (
                     <Stack spacing={2} direction="row">
-                        <Button color="inherit" onClick={onAccounts}>
-                            ACOUNTS
-                        </Button>
+                        <Link href={"/accounts"} passHref>
+                            <Button color="inherit">ACOUNTS</Button>
+                        </Link>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                 {!user && <AccountCircle />}

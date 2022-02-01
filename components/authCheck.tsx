@@ -1,3 +1,4 @@
+import { Button, Grid } from "@mui/material";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
@@ -16,7 +17,17 @@ const AuthCheck: NextPage<Props> = (props) => {
             </main>
         );
     }
-    return user ? props.children : props.fallback || <Link href="/auth">You must be signed in</Link>;
+    return user
+        ? props.children
+        : props.fallback || (
+              <Grid container justifyContent={"center"} alignContent={"center"} minHeight={"80vh"}>
+                  <Grid item>
+                      <Link href="/auth" passHref>
+                          <Button variant="contained">Login</Button>
+                      </Link>
+                  </Grid>
+              </Grid>
+          );
 };
 
 export default AuthCheck;
