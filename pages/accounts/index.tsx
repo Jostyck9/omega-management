@@ -15,17 +15,38 @@ import Account from "@lib/firebase/models/account";
 import AccountModal from "@components/AccountModal";
 import { AddCircle } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
-
-const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", flex: 1 },
-    { field: "name", headerName: "Account name", flex: 1 },
-    { field: "login", headerName: "Account login", flex: 1 },
-];
+import { createAccount, deleteAccount } from "../../lib/firebase/controllers/account";
 
 const Accounts: NextPage = () => {
     const { user } = useAuth();
     const [accountsSnapshots, loading, error] = useCollection(collection(db, `users/${user?.id}/accounts`));
     const [open, setOpen] = useState(false);
+
+    const columns: GridColDef[] = [
+        { field: "id", headerName: "ID", flex: 1 },
+        { field: "name", headerName: "Account name", flex: 1 },
+        { field: "login", headerName: "Account login", flex: 1 },
+        {
+            field: "action",
+            headerName: "Action",
+            sortable: false,
+            renderCell: (cellValues) => {
+                return (
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            console.log(cellValues);
+                            deleteAccount(user?.id!, cellValues.id as string).catch(() => console.error("An error occured while deleting"));
+                        }}
+                    >
+                        Delete
+                    </Button>
+                );
+            },
+        },
+    ];
 
     const rows: Account[] =
         loading || !accountsSnapshots
@@ -45,7 +66,11 @@ const Accounts: NextPage = () => {
 
     const handleClose = (account?: Account) => {
         if (account) {
-            console.log(account);
+            createAccount(user?.id!, account)
+                .then(() => {
+                    console.log("DONE");
+                })
+                .catch(() => console.error("An error occured"));
         }
         setOpen(false);
     };
