@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 import Metatags from "@components/Metatags";
 import { Typography, Stack, Button } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams, MuiEvent } from "@mui/x-data-grid";
-import AuthCheck from "@components/authCheck";
+import AuthCheck from "@components/AuthCheck";
 import Router from "next/router";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
@@ -27,11 +27,12 @@ const Accounts: NextPage = () => {
     const [accountsSnapshots, loading, error] = useCollection(collection(db, `users/${user?.id}/accounts`));
     const [open, setOpen] = useState(false);
 
-    const rows: Account[] = loading
-        ? []
-        : accountsSnapshots!.docs.map((account) => {
-              return { id: account.id, ...account.data() } as Account;
-          });
+    const rows: Account[] =
+        loading || !accountsSnapshots
+            ? []
+            : accountsSnapshots!.docs.map((account) => {
+                  return { id: account.id, ...account.data() } as Account;
+              });
 
     const onRowClick = (params: GridRowParams, event: MuiEvent<React.MouseEvent>) => {
         event.defaultMuiPrevented = true;
@@ -42,7 +43,10 @@ const Accounts: NextPage = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = (account?: Account) => {
+        if (account) {
+            console.log(account);
+        }
         setOpen(false);
     };
 
