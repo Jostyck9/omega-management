@@ -15,6 +15,7 @@ import Account from "@lib/firebase/models/account";
 import AccountModal from "@components/AccountModal";
 import { AddCircle } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { createAccount, deleteAccount } from "../../lib/firebase/controllers/account";
 
 const Accounts: NextPage = () => {
@@ -32,17 +33,16 @@ const Accounts: NextPage = () => {
             sortable: false,
             renderCell: (cellValues) => {
                 return (
-                    <Button
-                        variant="contained"
+                    <IconButton
                         color="error"
                         onClick={(event) => {
                             event.stopPropagation();
                             console.log(cellValues);
-                            deleteAccount(user?.id!, cellValues.id as string).catch(() => console.error("An error occured while deleting"));
+                            deleteAccount(user?.id!, cellValues.id as string);
                         }}
                     >
-                        Delete
-                    </Button>
+                        <DeleteIcon />
+                    </IconButton>
                 );
             },
         },
@@ -89,7 +89,7 @@ const Accounts: NextPage = () => {
                         </IconButton>
                     </Stack>
                     <div style={{ height: 400, width: "100%" }}>
-                        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} onRowClick={onRowClick} />
+                        <DataGrid loading={loading} rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} onRowClick={onRowClick} />
                     </div>
                 </Stack>
                 <AccountModal open={open} handleClose={handleClose}></AccountModal>
