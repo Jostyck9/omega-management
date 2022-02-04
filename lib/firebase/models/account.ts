@@ -3,3 +3,5 @@ export default interface Account {
     name: string;
     login: string;
 }
+
+export type NewAccount = Omit<Account, "id">;

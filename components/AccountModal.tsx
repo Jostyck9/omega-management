@@ -8,25 +8,29 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Account from "@lib/firebase/models/account";
 
 interface Props {
-    open: boolean;
-    handleClose: (account?: Account) => void;
+    showDialog: boolean;
+    name: string;
+    login: string;
+    handleChange: (account: Account) => void;
+    handleOk: () => void;
+    handleCancel: () => void;
 }
 
-const AccountModal = (props: Props) => {
-    const { open, handleClose } = props;
-    const [login, setLogin] = useState("");
+const AccountModal = ({ showDialog, name, login, handleChange, handleOk, handleCancel }: Props) => {
     const [loginError, setLoginError] = useState(false);
-    const [name, setName] = useState("");
     const [nameError, setNameError] = useState(false);
+
+    const [accountName, setAccountName] = useState(name);
+    const [accountLogin, setAccountLogin] = useState(login);
 
     const resetFields = () => {
         setLoginError(false);
         setNameError(false);
-        setLogin('');
-        setName('');
-    }
+        setAccountName(name);
+        setAccountLogin(login);
+    };
 
-    const handleSave = () => {
+    const onSave = () => {
         setLoginError(false);
         setNameError(false);
         if (login.length === 0) {
@@ -36,27 +40,37 @@ const AccountModal = (props: Props) => {
             setNameError(true);
         }
         if (name.length && login.length) {
+            handleOk();
             resetFields();
-            handleClose({ name: name, login: login });
         }
-    }
+    };
 
-    const handleCancel = () => {
+    const onCancel = () => {
         resetFields();
-        handleClose();
-    }
+        handleCancel();
+    };
+
+    const onNameChange = (event: any) => {
+        setAccountName(event.target.value);
+        //handleChange({ login: login, name: event.target.value });
+    };
+
+    const onLoginChange = (event: any) => {
+        setAccountLogin(event.target.value);
+        //handleChange({ login: event.target.value, name: name });
+    };
 
     return (
         <div>
-            <Dialog open={open} onClose={handleCancel}>
-                <DialogTitle>Create a new Account</DialogTitle>
+            <Dialog open={showDialog} onClose={onCancel}>
+                <DialogTitle>Account</DialogTitle>
                 <DialogContent>
-                    <TextField autoFocus required error={nameError} margin="dense" id="name" label="Name" onChange={(name) => setName(name.target.value)} fullWidth />
-                    <TextField required error={loginError} margin="dense" id="login" label="Login" onChange={(login) => setLogin(login.target.value)} fullWidth />
+                    <TextField autoFocus required error={nameError} margin="dense" id="name" label="Name" value={accountName} onChange={onNameChange} fullWidth />
+                    <TextField required error={loginError} margin="dense" id="login" label="Login" value={accountLogin} onChange={onLoginChange} fullWidth />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancel}>Cancel</Button>
-                    <Button onClick={handleSave}>Save</Button>
+                    <Button onClick={onCancel}>Cancel</Button>
+                    <Button onClick={onSave}>Save</Button>
                 </DialogActions>
             </Dialog>
         </div>

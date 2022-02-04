@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import type { NextPage } from "next";
 import Metatags from "@components/Metatags";
-import { Typography, Stack, Button } from "@mui/material";
+import { Typography, Stack } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams, MuiEvent } from "@mui/x-data-grid";
 import AuthCheck from "@components/AuthCheck";
 import Router from "next/router";
@@ -12,16 +12,20 @@ import { collection } from "firebase/firestore";
 import { db } from "@lib/firebase/clientApp";
 import { useAuth } from "@context/AuthContext";
 import Account from "@lib/firebase/models/account";
-import AccountModal from "@components/AccountModal";
 import { AddCircle } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { createAccount, deleteAccount } from "../../lib/firebase/controllers/account";
+import IconDelete from "@mui/icons-material/Delete";
+import IconEdit from "@mui/icons-material/Edit";
+import { deleteAccount } from "../../lib/firebase/controllers/account";
+import { useConfirmDialog } from "../../context/ConfirmDialogContext";
+import EditAccountModal from "@components/EditAccountModal";
+import NewAccountModal from "@components/NewAccountModal";
 
 const Accounts: NextPage = () => {
     const { user } = useAuth();
+    const { confirm } = useConfirmDialog();
+    const [openNewAccount, setOpenNewAccount] = useState(false);
     const [accountsSnapshots, loading, error] = useCollection(collection(db, `users/${user?.id}/accounts`));
-    const [open, setOpen] = useState(false);
 
     const columns: GridColDef[] = [
         { field: "id", headerName: "ID", flex: 1 },
@@ -32,17 +36,38 @@ const Accounts: NextPage = () => {
             headerName: "Action",
             sortable: false,
             renderCell: (cellValues) => {
+                const [open, setOpen] = useState(false);
+
+                const handleClose = () => {
+                    setOpen(false);
+                };
+
+                const account: Account = { id: cellValues.row.id, name: cellValues.row.name, login: cellValues.row.login };
+
                 return (
-                    <IconButton
-                        color="error"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            console.log(cellValues);
-                            deleteAccount(user?.id!, cellValues.id as string);
-                        }}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
+                    <>
+                        <IconButton
+                            color="primary"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                setOpen(true);
+                            }}
+                        >
+                            <IconEdit />
+                        </IconButton>
+                        <IconButton
+                            color="error"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                confirm(`Delete ${cellValues.row.name} ?`, `Are you sure you want to delete this account ?`)
+                                    .then(() => deleteAccount(user?.id!, cellValues.row.id))
+                                    .catch(() => {});
+                            }}
+                        >
+                            <IconDelete />
+                        </IconButton>
+                        <EditAccountModal showDialog={open} closeDialog={handleClose} account={account}></EditAccountModal>
+                    </>
                 );
             },
         },
@@ -60,20 +85,13 @@ const Accounts: NextPage = () => {
         Router.push(`/accounts/${params.id}/packs`);
     };
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const onCreate = () => {
+        setOpenNewAccount(true);
     };
 
-    const handleClose = (account?: Account) => {
-        if (account) {
-            createAccount(user?.id!, account)
-                .then(() => {
-                    console.log("DONE");
-                })
-                .catch(() => console.error("An error occured"));
-        }
-        setOpen(false);
-    };
+    const handleCloseNewAccount = () => {
+        setOpenNewAccount(false);
+    }
 
     return (
         <AuthCheck>
@@ -84,7 +102,7 @@ const Accounts: NextPage = () => {
                         <Typography variant="h5" component="div">
                             Manage Accounts
                         </Typography>
-                        <IconButton onClick={handleClickOpen}>
+                        <IconButton onClick={onCreate}>
                             <AddCircle fontSize="large" color="primary" />
                         </IconButton>
                     </Stack>
@@ -92,7 +110,7 @@ const Accounts: NextPage = () => {
                         <DataGrid loading={loading} rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} onRowClick={onRowClick} />
                     </div>
                 </Stack>
-                <AccountModal open={open} handleClose={handleClose}></AccountModal>
+                <NewAccountModal showDialog={openNewAccount} closeDialog={handleCloseNewAccount} ></NewAccountModal>
             </main>
         </AuthCheck>
     );
