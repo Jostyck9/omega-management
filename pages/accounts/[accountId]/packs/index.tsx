@@ -4,7 +4,7 @@ import Metatags from "@components/Metatags";
 import { Typography, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useAuth } from "../../../../context/AuthContext";
-import AuthCheck from "@components/AuthCheck";
+import AuthCheck from "@components/AuthCheckComponent";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
 import { db } from "@lib/firebase/clientApp";

@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 import Metatags from "@components/Metatags";
 import { Typography, Stack } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams, MuiEvent } from "@mui/x-data-grid";
-import AuthCheck from "@components/AuthCheck";
+import AuthCheck from "@components/AuthCheckComponent";
 import Router from "next/router";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
