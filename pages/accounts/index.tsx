@@ -75,7 +75,6 @@ const Accounts: NextPage = () => {
             headerName: "Action",
             sortable: false,
             renderCell: (cellValues) => {
-                console.log(cellValues.row);
                 return <CellAction account={{ id: cellValues.row.id, login: cellValues.row.login, name: cellValues.row.name }}></CellAction>;
             },
         },
