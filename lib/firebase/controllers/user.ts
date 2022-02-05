@@ -22,17 +22,6 @@ export const createUserProfileDocument = async (userAuth: User, additionalData?:
         } catch (err: any) {
             console.error("error creating user", err.message);
         }
-    } else {
-        try {
-            await updateDoc(userRef, {
-                displayName,
-                email,
-                photoURL,
-                ...additionalData,
-            });
-        } catch (err: any) {
-            console.error("error updating user", err.message);
-        }
     }
     return userRef;
 };

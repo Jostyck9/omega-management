@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Metatags from "@components/Metatags";
 import { Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import AuthCheck from "@components/authCheck";
+import AuthCheck from "@components/AuthCheckComponent";
 
 const Pack: NextPage = () => {
     const router = useRouter();
