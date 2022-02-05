@@ -1,13 +1,13 @@
 import { Button, Grid } from "@mui/material";
-import { NextPage } from "next";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 
 interface Props {
     fallback?: any;
+    children: any;
 }
 
-const AuthCheck: NextPage<Props> = (props) => {
+const AuthCheck = (props: Props) => {
     const { user, isLoading } = useAuth();
 
     if (isLoading) {
