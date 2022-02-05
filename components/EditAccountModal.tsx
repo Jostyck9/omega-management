@@ -29,7 +29,7 @@ const EditAccountModal = (props: Props) => {
     useEffect(() => {
         setName(account.name);
         setLogin(account.login);
-    }, [props]);
+    }, [props, account.name, account.login]);
 
     const resetFields = () => {
         setLoginError(false);

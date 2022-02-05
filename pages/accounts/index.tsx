@@ -21,9 +21,48 @@ import { useConfirmDialog } from "../../context/ConfirmDialogContext";
 import EditAccountModal from "@components/EditAccountModal";
 import NewAccountModal from "@components/NewAccountModal";
 
-const Accounts: NextPage = () => {
+type Props = {
+    account: Account;
+};
+
+const CellAction = ({ account }: Props) => {
+    const [open, setOpen] = useState(false);
     const { user } = useAuth();
     const { confirm } = useConfirmDialog();
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <>
+            <IconButton
+                color="primary"
+                onClick={(event) => {
+                    event.stopPropagation();
+                    setOpen(true);
+                }}
+            >
+                <IconEdit />
+            </IconButton>
+            <IconButton
+                color="error"
+                onClick={(event) => {
+                    event.stopPropagation();
+                    confirm(`Delete ${account.name} ?`, `Are you sure you want to delete this account ?`)
+                        .then(() => deleteAccount(user?.id!, account.id!))
+                        .catch(() => {});
+                }}
+            >
+                <IconDelete />
+            </IconButton>
+            <EditAccountModal showDialog={open} closeDialog={handleClose} account={account}></EditAccountModal>
+        </>
+    );
+};
+
+const Accounts: NextPage = () => {
+    const { user } = useAuth();
     const [openNewAccount, setOpenNewAccount] = useState(false);
     const [accountsSnapshots, loading, error] = useCollection(collection(db, `users/${user?.id}/accounts`));
 
@@ -36,39 +75,8 @@ const Accounts: NextPage = () => {
             headerName: "Action",
             sortable: false,
             renderCell: (cellValues) => {
-                const [open, setOpen] = useState(false);
-
-                const handleClose = () => {
-                    setOpen(false);
-                };
-
-                const account: Account = { id: cellValues.row.id, name: cellValues.row.name, login: cellValues.row.login };
-
-                return (
-                    <>
-                        <IconButton
-                            color="primary"
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                setOpen(true);
-                            }}
-                        >
-                            <IconEdit />
-                        </IconButton>
-                        <IconButton
-                            color="error"
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                confirm(`Delete ${cellValues.row.name} ?`, `Are you sure you want to delete this account ?`)
-                                    .then(() => deleteAccount(user?.id!, cellValues.row.id))
-                                    .catch(() => {});
-                            }}
-                        >
-                            <IconDelete />
-                        </IconButton>
-                        <EditAccountModal showDialog={open} closeDialog={handleClose} account={account}></EditAccountModal>
-                    </>
-                );
+                console.log(cellValues.row);
+                return <CellAction account={{ id: cellValues.row.id, login: cellValues.row.login, name: cellValues.row.name }}></CellAction>;
             },
         },
     ];
@@ -91,7 +99,7 @@ const Accounts: NextPage = () => {
 
     const handleCloseNewAccount = () => {
         setOpenNewAccount(false);
-    }
+    };
 
     return (
         <AuthCheck>
@@ -110,7 +118,7 @@ const Accounts: NextPage = () => {
                         <DataGrid loading={loading} rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} onRowClick={onRowClick} />
                     </div>
                 </Stack>
-                <NewAccountModal showDialog={openNewAccount} closeDialog={handleCloseNewAccount} ></NewAccountModal>
+                <NewAccountModal showDialog={openNewAccount} closeDialog={handleCloseNewAccount}></NewAccountModal>
             </main>
         </AuthCheck>
     );
