@@ -3,6 +3,7 @@ import Metatags from "@components/Metatags";
 import { Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import AuthCheck from "@components/AuthCheckComponent";
+import PackDetail from "@components/PackDetail";
 
 const Pack: NextPage = () => {
     const router = useRouter();
@@ -15,6 +16,7 @@ const Pack: NextPage = () => {
                 <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
                     Account {accountId} Manage pack with id {packId}
                 </Typography>
+                <PackDetail accountId={accountId as string} packId={packId as string}></PackDetail>
             </main>
         </AuthCheck>
     );
